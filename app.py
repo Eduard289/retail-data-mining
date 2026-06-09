@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
+import altair as alt
 
 # Configuración de la página
 st.set_page_config(page_title="Analítica Retail", layout="wide")
@@ -30,7 +31,6 @@ try:
 
     st.sidebar.markdown("---")
     st.sidebar.subheader("🎛️ Parámetros del Algoritmo")
-    # Filtros para evitar el "ruido" de productos que se compran muy poco
     soporte_minimo = st.sidebar.slider("Soporte Mínimo (%)", min_value=1, max_value=20, value=5, step=1) / 100.0
     lift_minimo = st.sidebar.slider("Lift Mínimo", min_value=1.0, max_value=10.0, value=1.0, step=0.5)
 
@@ -48,38 +48,49 @@ try:
 
     # 4. Transformación a Matriz Transaccional
     with st.spinner("Construyendo matriz transaccional en RAM..."):
-        # Agrupamos por ticket y producto, y transformamos en valores booleanos (True/False)
         basket = (df_filtrado.groupby(['InvoiceNo', 'Description'])['Quantity']
                   .sum().unstack().reset_index().fillna(0).set_index('InvoiceNo'))
-        
-        # Si la cantidad es mayor que 0, es True (se compró), sino False
         basket_sets = basket > 0
 
-    # 5. Ejecución del Algoritmo Apriori
+    # 5. Ejecución del Algoritmo y Visualización
     with st.spinner("Ejecutando algoritmo de Machine Learning..."):
-        # Extraemos los productos comprados frecuentemente
         itemsets_frecuentes = apriori(basket_sets, min_support=soporte_minimo, use_colnames=True)
         
         if itemsets_frecuentes.empty:
-            st.warning("No se encontraron patrones con el Soporte actual. Prueba a bajar el 'Soporte Mínimo' en la barra lateral.")
+            st.warning("No se encontraron patrones con el Soporte actual. Prueba a bajar el 'Soporte Mínimo'.")
         else:
-            # Generamos las reglas de asociación cruzada
             reglas = association_rules(itemsets_frecuentes, metric="lift", min_threshold=lift_minimo)
             
             if reglas.empty:
                 st.warning("Hay productos frecuentes, pero ninguno genera reglas cruzadas fuertes. Baja el 'Lift Mínimo'.")
             else:
-                # Limpiamos los datos para que el directivo lo lea fácil
                 reglas['antecedents'] = reglas['antecedents'].apply(lambda x: ', '.join(list(x)))
                 reglas['consequents'] = reglas['consequents'].apply(lambda x: ', '.join(list(x)))
                 
-                # Seleccionamos las columnas útiles y ordenamos por la fuerza de la regla (Lift)
                 reglas_mostrar = reglas[['antecedents', 'consequents', 'support', 'confidence', 'lift']].copy()
                 reglas_mostrar.columns = ['Si compran esto...', '...También compran esto', 'Soporte', 'Confianza', 'Lift (Fuerza)']
                 reglas_mostrar = reglas_mostrar.sort_values('Lift (Fuerza)', ascending=False)
                 
                 st.success(f"¡Análisis completado! Se han descubierto {len(reglas)} reglas de asociación fuertes en {pais_seleccionado}.")
+                
+                # Desplegar la tabla
                 st.dataframe(reglas_mostrar, use_container_width=True)
+
+                st.markdown("---")
+                st.subheader("📈 Mapa Estratégico de Oportunidades de Cross-Selling")
+                
+                # Gráfico interactivo
+                grafico = alt.Chart(reglas_mostrar).mark_circle().encode(
+                    x=alt.X('Soporte', title='Soporte (Popularidad)'),
+                    y=alt.Y('Confianza', title='Confianza (Probabilidad)'),
+                    size=alt.Size('Lift (Fuerza)', title='Lift', scale=alt.Scale(range=[100, 1000])),
+                    color=alt.Color('Lift (Fuerza)', scale=alt.Scale(scheme='viridis')),
+                    tooltip=['Si compran esto...', '...También compran esto', 'Lift (Fuerza)']
+                ).interactive().properties(
+                    height=450
+                )
+                
+                st.altair_chart(grafico, use_container_width=True)
 
 except Exception as e:
     st.error(f"Error en la ejecución: {e}")
