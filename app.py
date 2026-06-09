@@ -73,8 +73,8 @@ try:
                 
                 st.success(f"¡Análisis completado! Se han descubierto {len(reglas)} reglas de asociación fuertes en {pais_seleccionado}.")
                 
-                # Desplegar la tabla
-                st.dataframe(reglas_mostrar, use_container_width=True)
+                # Desplegar la tabla con el nuevo parámetro de Streamlit
+                st.dataframe(reglas_mostrar, width='stretch')
 
                 st.markdown("---")
                 st.subheader("📈 Mapa Estratégico de Oportunidades de Cross-Selling")
@@ -90,7 +90,8 @@ try:
                     height=450
                 )
                 
-                st.altair_chart(grafico, use_container_width=True)
+                # Desplegar el gráfico con el nuevo parámetro de Streamlit
+                st.altair_chart(grafico, width='stretch')
 
 except Exception as e:
     st.error(f"Error en la ejecución: {e}")
