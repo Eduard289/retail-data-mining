@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
 import altair as alt
-from st_aggrid import AgGrid, GridOptionsBuilder
 
 # Configuración de la página
 st.set_page_config(page_title="Analítica Retail", layout="wide")
@@ -23,7 +22,7 @@ def cargar_datos():
 try:
     df_retail = cargar_datos()
     
-    # 2. Sidebar: Configuración y Buscador
+    # 2. Sidebar: Configuración y Buscador Semántico
     st.sidebar.header("⚙️ Configuración del Análisis")
     
     paises = sorted(df_retail['Country'].unique())
@@ -43,7 +42,7 @@ try:
     df_filtrado = df_retail[df_retail['Country'] == pais_seleccionado]
     tickets_totales = df_filtrado['InvoiceNo'].nunique()
 
-    # Extraemos un diccionario de precios medios para calcular el impacto financiero luego
+    # Extraemos diccionario de precios medios
     precios_dict = df_filtrado.groupby('Description')['UnitPrice'].mean().to_dict()
 
     # Visualización de métricas
@@ -80,16 +79,14 @@ try:
                 reglas_mostrar.columns = ['Si compran esto...', '...También compran esto', 'Soporte', 'Confianza', 'Lift (Fuerza)']
                 
                 # --- MEJORA FINANCIERA ---
-                # Calculamos el dinero que mueve el producto consecuente cuando se activa la regla
                 def estimar_impacto(fila):
                     consecuentes = fila['...También compran esto'].split(', ')
                     precio_total = sum(precios_dict.get(item, 0) for item in consecuentes)
-                    # (Probabilidad de que ocurra en el total de tickets) * Precio de los artículos sugeridos
                     return round((fila['Soporte'] * tickets_totales) * precio_total, 2)
                 
                 reglas_mostrar['Oportunidad (€)'] = reglas_mostrar.apply(estimar_impacto, axis=1)
                 
-                # Ordenar por el dinero que generan en lugar de solo por el Lift
+                # Ordenar por dinero generado
                 reglas_mostrar = reglas_mostrar.sort_values('Oportunidad (€)', ascending=False)
 
                 # --- MEJORA SEMÁNTICA (BUSCADOR) ---
@@ -102,29 +99,17 @@ try:
                 else:
                     st.success(f"¡Análisis completado! Se muestran {len(reglas_mostrar)} reglas de alto impacto.")
                     
-                    # --- MEJORA VISUAL (AG-GRID JS) ---
-                    gb = GridOptionsBuilder.from_dataframe(reglas_mostrar)
-                    gb.configure_pagination(paginationAutoPageSize=True) # Paginación automática
-                    gb.configure_side_bar() # Menú lateral de Excel para agrupar/filtrar
-                    gridOptions = gb.build()
-
-                    AgGrid(
-                        reglas_mostrar,
-                        gridOptions=gridOptions,
-                        enable_enterprise_modules=True,
-                        fit_columns_on_grid_load=True,
-                        theme='balham' # Tema profesional y limpio
-                    )
+                    # Tabla Nativa Rápida y Limpia
+                    st.dataframe(reglas_mostrar, width='stretch')
 
                     st.markdown("---")
                     st.subheader("📈 Mapa Estratégico de Oportunidades")
                     
-                    # Gráfico interactivo adaptado para mostrar la oportunidad en el Tooltip
                     grafico = alt.Chart(reglas_mostrar).mark_circle().encode(
                         x=alt.X('Soporte', title='Soporte (Popularidad)'),
                         y=alt.Y('Confianza', title='Confianza (Probabilidad)'),
                         size=alt.Size('Lift (Fuerza)', title='Lift', scale=alt.Scale(range=[100, 1000])),
-                        color=alt.Color('Oportunidad (€)', scale=alt.Scale(scheme='greens')), # Burbujas más oscuras = Más dinero
+                        color=alt.Color('Oportunidad (€)', scale=alt.Scale(scheme='greens')),
                         tooltip=['Si compran esto...', '...También compran esto', 'Lift (Fuerza)', 'Oportunidad (€)']
                     ).interactive().properties(
                         height=450
