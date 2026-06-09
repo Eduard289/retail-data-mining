@@ -88,15 +88,15 @@ try:
     st.sidebar.markdown("---")
     
     # Botón interactivo para desplegar el popup con la mega-guía
-    if st.sidebar.button("📚 Ver Conceptos y Utilidad", use_container_width=True):
+    if st.sidebar.button(" Retail Data Strategic", use_container_width=True):
         mostrar_guia()
 
     st.sidebar.markdown("---")
-    st.sidebar.subheader("🔍 Filtro de Producto")
+    st.sidebar.subheader(" Filtro de Producto")
     termino_busqueda = st.sidebar.text_input("Buscar familia (ej. BAG, HEART, VINTAGE):", "").upper()
 
     st.sidebar.markdown("---")
-    st.sidebar.subheader("🎛️ Parámetros del Algoritmo")
+    st.sidebar.subheader(" Parámetros del Algoritmo")
     soporte_minimo = st.sidebar.slider("Soporte Mínimo (%)", min_value=1, max_value=20, value=5, step=1) / 100.0
     lift_minimo = st.sidebar.slider("Lift Mínimo", min_value=1.0, max_value=10.0, value=1.0, step=0.5)
 
@@ -161,7 +161,7 @@ try:
                     st.dataframe(reglas_mostrar, width='stretch')
 
                     st.markdown("---")
-                    st.subheader("📈 Mapa Estratégico de Oportunidades")
+                    st.subheader(" Mapa Estratégico de Oportunidades")
                     
                     grafico = alt.Chart(reglas_mostrar).mark_circle().encode(
                         x=alt.X('Soporte', title='Soporte (Popularidad)'),
