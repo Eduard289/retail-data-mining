@@ -10,8 +10,30 @@ st.set_page_config(page_title="Analítica Retail", layout="wide")
 st.title("🌍 Analítica Retail: Segmentación Internacional")
 st.markdown("---")
 
-# 1. Motor de Ingesta en RAM
-@st.cache_data(show_spinner="Conectando con la base de datos de la UCI...")
+# Ventana emergente (Popup) con la Guía Metodológica e Información del Dataset
+@st.dialog("📚 Guía Metodológica y Utilidad Retail", width="large")
+def mostrar_guia():
+    st.markdown("""
+    ### 🎯 Utilidad Aplicada al Retail
+    Esta herramienta implementa un **Motor de Minería de Datos (Market Basket Analysis)** diseñado para identificar el comportamiento transfronterizo del consumidor. Su utilidad radica en transformar miles de tickets de caja en decisiones operativas de alto impacto:
+    * **Optimización del Layout (Tienda Física):** Ubicar productos con alto *Lift* juntos en la sala de ventas para fomentar la compra por impulso.
+    * **Estrategia de Precios y Packs (Bundles):** Crear promociones cruzadas (*Cross-Selling*) empaquetando un artículo de alta frecuencia con su consecuente de alto margen.
+    * **Personalización E-commerce:** Alimentar los motores de recomendación web ("Los clientes que compraron esto también se llevaron...").
+    * **Incremento del UPT (Unidades por Ticket):** Elevar el ticket medio mediante decisiones respaldadas por datos empíricos y no por intuición.
+
+    ### 🧠 Explicación de Conceptos Clave
+    * **Soporte (Popularidad):** Indica el porcentaje de tickets totales de la tienda que contienen la combinación de productos analizada. Nos ayuda a ignorar compras anecdóticas o casuales.
+    * **Confianza (Probabilidad):** Es la probabilidad de acierto de la regla. Si una regla tiene una confianza del 80% (0.80), significa que de cada 100 clientes que meten el primer producto en la cesta, 80 acaban comprando también el segundo.
+    * **Lift (Fuerza de Asociación):** Mide el "efecto imán" entre los artículos. Un Lift de 1.0 significa que se compran juntos por azar. Un Lift de 3.0 significa que la compra del primer artículo multiplica por tres la probabilidad de que el cliente se lleve el segundo. Es la métrica reina para descubrir sinergias reales.
+    * **Oportunidad Financiera (€):** Métrica de negocio exclusiva de este cuadro de mando. Estima el impacto económico latente multiplicando la frecuencia proyectada de la regla por el precio medio de los artículos sugeridos. Permite al manager priorizar las acciones comerciales por dinero real y no solo por estadística.
+
+    ### 📂 Fuente de los Datos y Contenido
+    * **Cita Oficial:** *Online Retail Data Set*, proporcionado por el **UCI Machine Learning Repository** (University of California, Irvine).
+    * **Contenido del Dataset:** Contiene el histórico real de **541,909 transacciones** comerciales de una empresa de e-commerce minorista (retailer non-store) que opera a nivel internacional. El registro abarca un ejercicio fiscal completo (entre el 01/12/2010 y el 09/12/2011). Incluye variables críticas como número de factura, código de artículo (SKU), descripción del producto, cantidad vendida, precio unitario, ID del cliente y país de origen, lo que permite realizar el perfilado transaccional por mercados.
+    """)
+
+# 1. Motor de Ingesta en RAM con mensaje personalizado
+@st.cache_data(show_spinner="Conectando con la base de datos real de la UCI, debido a la cantidad de datos de carga puede tardar unos segundos...")
 def cargar_datos():
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00352/Online%20Retail.xlsx"
     df = pd.read_excel(url)
@@ -22,12 +44,18 @@ def cargar_datos():
 try:
     df_retail = cargar_datos()
     
-    # 2. Sidebar: Configuración y Buscador Semántico
+    # 2. Sidebar: Configuración, Buscador y Botón de Información
     st.sidebar.header("⚙️ Configuración del Análisis")
     
     paises = sorted(df_retail['Country'].unique())
     indice_defecto = paises.index('Spain') if 'Spain' in paises else 0
     pais_seleccionado = st.sidebar.selectbox("Selecciona el Mercado:", paises, index=indice_defecto)
+
+    st.sidebar.markdown("---")
+    
+    # Botón interactivo para desplegar el popup
+    if st.sidebar.button("📚 Ver Conceptos y Utilidad", use_container_width=True):
+        mostrar_guia()
 
     st.sidebar.markdown("---")
     st.sidebar.subheader("🔍 Filtro de Producto")
@@ -85,8 +113,6 @@ try:
                     return round((fila['Soporte'] * tickets_totales) * precio_total, 2)
                 
                 reglas_mostrar['Oportunidad (€)'] = reglas_mostrar.apply(estimar_impacto, axis=1)
-                
-                # Ordenar por dinero generado
                 reglas_mostrar = reglas_mostrar.sort_values('Oportunidad (€)', ascending=False)
 
                 # --- MEJORA SEMÁNTICA (BUSCADOR) ---
@@ -98,8 +124,6 @@ try:
                     st.info(f"No se han encontrado reglas que contengan la palabra '{termino_busqueda}'.")
                 else:
                     st.success(f"¡Análisis completado! Se muestran {len(reglas_mostrar)} reglas de alto impacto.")
-                    
-                    # Tabla Nativa Rápida y Limpia
                     st.dataframe(reglas_mostrar, width='stretch')
 
                     st.markdown("---")
@@ -116,6 +140,10 @@ try:
                     )
                     
                     st.altair_chart(grafico, width='stretch')
+
+    # Footer de firma (Se muestra siempre abajo del todo)
+    st.markdown("---")
+    st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"Error en la ejecución: {e}")
