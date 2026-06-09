@@ -79,7 +79,7 @@ try:
     df_retail = cargar_datos()
     
     # 2. Sidebar: Configuración, Buscador y Botón de Información
-    st.sidebar.header("⚙️ Configuración del Análisis")
+    st.sidebar.header(" Configuración del Análisis")
     
     paises = sorted(df_retail['Country'].unique())
     indice_defecto = paises.index('Spain') if 'Spain' in paises else 0
@@ -114,7 +114,7 @@ try:
     col3.metric("Clientes Identificados", f"{df_filtrado['CustomerID'].nunique():,}")
 
     st.markdown("---")
-    st.subheader("🧠 Motor de Minería y Oportunidad Financiera")
+    st.subheader(" Motor de Minería y Oportunidad Financiera")
 
     # 4. Transformación a Matriz
     with st.spinner("Construyendo matriz transaccional en RAM..."):
