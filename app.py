@@ -6,7 +6,7 @@ import altair as alt
 # Configuración de la página
 st.set_page_config(page_title="Analítica Retail", layout="wide")
 
-# Cabecera principal
+
 st.title(" Analítica retail: minería de datos")
 st.markdown("---")
 
