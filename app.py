@@ -176,9 +176,7 @@ try:
                     st.altair_chart(grafico, width='stretch')
 
     # Footer de firma actualizado (Se muestra siempre abajo del todo)
-    st.markdown("---")
-    st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado y desarrollado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
-            # Footer de firma
+    
     st.markdown("---")
     st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado y desarrollado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
 except Exception as e:
