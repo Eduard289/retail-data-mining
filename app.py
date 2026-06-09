@@ -7,14 +7,14 @@ import altair as alt
 st.set_page_config(page_title="Analítica Retail", layout="wide")
 
 # Cabecera principal
-st.title("🌍 Analítica Retail: Segmentación Internacional")
+st.title(" Analítica retail: minería de datos")
 st.markdown("---")
 
 # Ventana emergente (Popup) con la Guía Metodológica, Explicación y Utilidad Retail
-@st.dialog("📚 Guía Metodológica y Análisis Estratégico", width="large")
+@st.dialog(" Guía Metodológica y Análisis Estratégico", width="large")
 def mostrar_guia():
     st.markdown("""
-    ### 🚀 Operativa Retail: ¿Para qué sirve implementar esta herramienta?
+    ###  Operativa Retail: ¿Para qué sirve implementar esta herramienta?
     Implementar este motor analítico permite a un comercio pasar de la intuición a la precisión basada en datos. Transforma miles de tickets de caja en decisiones operativas de alto impacto:
     * **Visual Merchandising Inteligente:** Diseñar el *layout* de la tienda física colocando productos con alta fuerza de asociación (Lift) juntos o en el camino natural del cliente para forzar la compra por impulso.
     * **Estrategias de Precios (Bundles):** Crear packs promocionales hiperrentables uniendo un producto gancho de alta frecuencia con su consecuente de alto margen.
@@ -23,7 +23,7 @@ def mostrar_guia():
 
     ---
 
-    ### 1️⃣ La Tabla: El Descubrimiento de Patrones
+    ### 1️ La Tabla: El Descubrimiento de Patrones
     Esta tabla es el resultado directo del algoritmo Apriori. Ha leído todos los tickets de cada país y ha empezado a conectar puntos que un ojo humano, mirando un Excel, jamás vería.
 
     Fíjate en las líneas que captura tu modelo. Es pura lógica de consumo detectada matemáticamente:
@@ -32,14 +32,14 @@ def mostrar_guia():
 
     ---
 
-    ### 2️⃣ El Gráfico de Dispersión: El Mapa Estratégico
+    ### 2️ El Gráfico de Dispersión: El Mapa Estratégico
     La tabla está genial para leer datos exactos, pero este gráfico es el panel de mando que le presentarías a un Director General. Aquí cruzas las tres métricas matemáticas clave de la minería de datos:
 
     * **Eje X (Soporte - Popularidad):** Te dice de izquierda a derecha cuánto se repite esa combinación en la tienda. Cuanto más a la derecha esté un punto, más habitual es esa cesta de la compra.
     * **Eje Y (Confianza - Probabilidad):** Te dice de abajo a arriba la probabilidad de acierto. Si un punto está en el 0.8, significa que el 80% de las veces que un cliente coge el Producto A, acaba llevándose el Producto B.
     * **El Tamaño y Color de la Burbuja (LIFT - Fuerza y €):** Es la métrica reina. Un Lift alto (burbujas muy grandes y verdes) indica que la venta del Producto B está impulsada fuertemente por la del Producto A. No es casualidad que se vendan juntos; están íntimamente ligados en la mente del consumidor.
 
-    🎯 **Cómo leer el gráfico para tomar decisiones:**
+     **Cómo leer el gráfico para tomar decisiones:**
     * **El "Santo Grial" (Burbujas grandes, arriba y a la derecha):** Son productos súper populares, con alta probabilidad de compra conjunta y una sinergia altísima. Aquí es donde debes invertir tu presupuesto de marketing cruzado.
     * **Burbujas grandes arriba, pero a la izquierda:** Son productos de nicho (se venden poco volumen total), pero cuando un cliente los busca, la venta cruzada es casi segura. Ideal para promociones exclusivas.
     * **Burbujas pequeñas y oscuras abajo:** Son coincidencias. Productos que a veces caen en el mismo ticket por puro azar. No pierdas tiempo ni espacio en tienda intentando juntarlos.
@@ -48,7 +48,7 @@ def mostrar_guia():
 
     ---
 
-    ### 🧠 Conceptos Matemáticos Clave
+    ###  Conceptos Matemáticos Clave
     * **Soporte:** Indica el porcentaje de tickets totales de la tienda que contienen la combinación analizada.
     * **Confianza:** Es la probabilidad de acierto de la regla.
     * **Lift:** Mide el "efecto imán". Un Lift de 3.0 significa que la compra del primer artículo multiplica por tres la probabilidad de que se lleve el segundo.
@@ -56,7 +56,7 @@ def mostrar_guia():
 
     ---
 
-    ### 📂 Fuente de los Datos y Contenido
+    ###  Fuente de los Datos y Contenido
     * **Cita Oficial:** *Online Retail Data Set*, proporcionado por el **UCI Machine Learning Repository** (University of California, Irvine).
     * **Contenido:** Histórico real de **541,909 transacciones** comerciales de una empresa minorista internacional. Abarca un ejercicio fiscal completo (01/12/2010 - 09/12/2011), incluyendo campos críticos como SKU, precio, cantidad y país de facturación.
     """)
@@ -173,6 +173,8 @@ try:
     # Footer de firma actualizado (Se muestra siempre abajo del todo)
     st.markdown("---")
     st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado y desarrollado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
-
+            # Footer de firma
+    st.markdown("---")
+    st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado y desarrollado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
 except Exception as e:
     st.error(f"Error en la ejecución: {e}")
