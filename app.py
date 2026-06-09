@@ -10,30 +10,59 @@ st.set_page_config(page_title="Analítica Retail", layout="wide")
 st.title("🌍 Analítica Retail: Segmentación Internacional")
 st.markdown("---")
 
-# Ventana emergente (Popup) con la Guía Metodológica e Información del Dataset
-@st.dialog("📚 Guía Metodológica y Utilidad Retail", width="large")
+# Ventana emergente (Popup) con la Guía Metodológica, Explicación y Utilidad Retail
+@st.dialog("📚 Guía Metodológica y Análisis Estratégico", width="large")
 def mostrar_guia():
     st.markdown("""
-    ### 🎯 Utilidad Aplicada al Retail
-    Esta herramienta implementa un **Motor de Minería de Datos (Market Basket Analysis)** diseñado para identificar el comportamiento transfronterizo del consumidor. Su utilidad radica en transformar miles de tickets de caja en decisiones operativas de alto impacto:
-    * **Optimización del Layout (Tienda Física):** Ubicar productos con alto *Lift* juntos en la sala de ventas para fomentar la compra por impulso.
-    * **Estrategia de Precios y Packs (Bundles):** Crear promociones cruzadas (*Cross-Selling*) empaquetando un artículo de alta frecuencia con su consecuente de alto margen.
-    * **Personalización E-commerce:** Alimentar los motores de recomendación web ("Los clientes que compraron esto también se llevaron...").
-    * **Incremento del UPT (Unidades por Ticket):** Elevar el ticket medio mediante decisiones respaldadas por datos empíricos y no por intuición.
+    ### 🚀 Operativa Retail: ¿Para qué sirve implementar esta herramienta?
+    Implementar este motor analítico permite a un comercio pasar de la intuición a la precisión basada en datos. Transforma miles de tickets de caja en decisiones operativas de alto impacto:
+    * **Visual Merchandising Inteligente:** Diseñar el *layout* de la tienda física colocando productos con alta fuerza de asociación (Lift) juntos o en el camino natural del cliente para forzar la compra por impulso.
+    * **Estrategias de Precios (Bundles):** Crear packs promocionales hiperrentables uniendo un producto gancho de alta frecuencia con su consecuente de alto margen.
+    * **Personalización E-commerce:** Alimentar directamente los motores de recomendación web y configurar los pop-ups de *"Los clientes que compraron esto, también se llevaron..."*.
+    * **Incremento del UPT (Unidades por Ticket):** El resultado inmediato de estas sinergias es una subida drástica de los artículos vendidos por transacción y del ticket medio.
 
-    ### 🧠 Explicación de Conceptos Clave
-    * **Soporte (Popularidad):** Indica el porcentaje de tickets totales de la tienda que contienen la combinación de productos analizada. Nos ayuda a ignorar compras anecdóticas o casuales.
-    * **Confianza (Probabilidad):** Es la probabilidad de acierto de la regla. Si una regla tiene una confianza del 80% (0.80), significa que de cada 100 clientes que meten el primer producto en la cesta, 80 acaban comprando también el segundo.
-    * **Lift (Fuerza de Asociación):** Mide el "efecto imán" entre los artículos. Un Lift de 1.0 significa que se compran juntos por azar. Un Lift de 3.0 significa que la compra del primer artículo multiplica por tres la probabilidad de que el cliente se lleve el segundo. Es la métrica reina para descubrir sinergias reales.
-    * **Oportunidad Financiera (€):** Métrica de negocio exclusiva de este cuadro de mando. Estima el impacto económico latente multiplicando la frecuencia proyectada de la regla por el precio medio de los artículos sugeridos. Permite al manager priorizar las acciones comerciales por dinero real y no solo por estadística.
+    ---
+
+    ### 1️⃣ La Tabla: El Descubrimiento de Patrones
+    Esta tabla es el resultado directo del algoritmo Apriori. Ha leído todos los tickets de cada país y ha empezado a conectar puntos que un ojo humano, mirando un Excel, jamás vería.
+
+    Fíjate en las líneas que captura tu modelo. Es pura lógica de consumo detectada matemáticamente:
+    * **Regla 112 & 115 (Ejemplo España):** Si compran la "Cocina de juguete Poppy" (*Poppy's Playhouse Kitchen*), automáticamente compran la "Habitación de juguete Poppy" (*Bedroom*).
+    * **Regla 154 & 155:** Quien compra las velas de celebración para niñas, también se lleva el set de 10 velas de lunares rosas.
+
+    ---
+
+    ### 2️⃣ El Gráfico de Dispersión: El Mapa Estratégico
+    La tabla está genial para leer datos exactos, pero este gráfico es el panel de mando que le presentarías a un Director General. Aquí cruzas las tres métricas matemáticas clave de la minería de datos:
+
+    * **Eje X (Soporte - Popularidad):** Te dice de izquierda a derecha cuánto se repite esa combinación en la tienda. Cuanto más a la derecha esté un punto, más habitual es esa cesta de la compra.
+    * **Eje Y (Confianza - Probabilidad):** Te dice de abajo a arriba la probabilidad de acierto. Si un punto está en el 0.8, significa que el 80% de las veces que un cliente coge el Producto A, acaba llevándose el Producto B.
+    * **El Tamaño y Color de la Burbuja (LIFT - Fuerza y €):** Es la métrica reina. Un Lift alto (burbujas muy grandes y verdes) indica que la venta del Producto B está impulsada fuertemente por la del Producto A. No es casualidad que se vendan juntos; están íntimamente ligados en la mente del consumidor.
+
+    🎯 **Cómo leer el gráfico para tomar decisiones:**
+    * **El "Santo Grial" (Burbujas grandes, arriba y a la derecha):** Son productos súper populares, con alta probabilidad de compra conjunta y una sinergia altísima. Aquí es donde debes invertir tu presupuesto de marketing cruzado.
+    * **Burbujas grandes arriba, pero a la izquierda:** Son productos de nicho (se venden poco volumen total), pero cuando un cliente los busca, la venta cruzada es casi segura. Ideal para promociones exclusivas.
+    * **Burbujas pequeñas y oscuras abajo:** Son coincidencias. Productos que a veces caen en el mismo ticket por puro azar. No pierdas tiempo ni espacio en tienda intentando juntarlos.
+
+    **En resumen:** Tu aplicación no solo dice "qué se vende", sino que gracias a este gráfico puedes priorizar dónde poner tus esfuerzos operativos para maximizar el margen de beneficio.
+
+    ---
+
+    ### 🧠 Conceptos Matemáticos Clave
+    * **Soporte:** Indica el porcentaje de tickets totales de la tienda que contienen la combinación analizada.
+    * **Confianza:** Es la probabilidad de acierto de la regla.
+    * **Lift:** Mide el "efecto imán". Un Lift de 3.0 significa que la compra del primer artículo multiplica por tres la probabilidad de que se lleve el segundo.
+    * **Oportunidad Financiera (€):** Estima el impacto económico latente multiplicando la frecuencia proyectada por el precio medio.
+
+    ---
 
     ### 📂 Fuente de los Datos y Contenido
     * **Cita Oficial:** *Online Retail Data Set*, proporcionado por el **UCI Machine Learning Repository** (University of California, Irvine).
-    * **Contenido del Dataset:** Contiene el histórico real de **541,909 transacciones** comerciales de una empresa de e-commerce minorista (retailer non-store) que opera a nivel internacional. El registro abarca un ejercicio fiscal completo (entre el 01/12/2010 y el 09/12/2011). Incluye variables críticas como número de factura, código de artículo (SKU), descripción del producto, cantidad vendida, precio unitario, ID del cliente y país de origen, lo que permite realizar el perfilado transaccional por mercados.
+    * **Contenido:** Histórico real de **541,909 transacciones** comerciales de una empresa minorista internacional. Abarca un ejercicio fiscal completo (01/12/2010 - 09/12/2011), incluyendo campos críticos como SKU, precio, cantidad y país de facturación.
     """)
 
 # 1. Motor de Ingesta en RAM con mensaje personalizado
-@st.cache_data(show_spinner="Conectando con la base de datos real de la UCI, debido a la cantidad de datos de carga puede tardar unos segundos...")
+@st.cache_data(show_spinner="Conectando con la base de datos real de la UCI, debido a la cantidad de datos de carga puede tardar unos minutos...")
 def cargar_datos():
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00352/Online%20Retail.xlsx"
     df = pd.read_excel(url)
@@ -53,7 +82,7 @@ try:
 
     st.sidebar.markdown("---")
     
-    # Botón interactivo para desplegar el popup
+    # Botón interactivo para desplegar el popup con la mega-guía
     if st.sidebar.button("📚 Ver Conceptos y Utilidad", use_container_width=True):
         mostrar_guia()
 
@@ -141,9 +170,9 @@ try:
                     
                     st.altair_chart(grafico, width='stretch')
 
-    # Footer de firma (Se muestra siempre abajo del todo)
+    # Footer de firma actualizado (Se muestra siempre abajo del todo)
     st.markdown("---")
-    st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #7f8c8d; font-size: 14px;'>Diseñado y desarrollado por Jose Luis Asenjo</p>", unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"Error en la ejecución: {e}")
